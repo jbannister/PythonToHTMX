@@ -1,0 +1,39 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>ToDo List with HTMX</title>
+        <!-- HTMX Library -->
+        <script src="https://unpkg.com/htmx.org"></script>
+    </head>
+    <body>
+        <h1>ToDo List</h1>
+
+        <!-- Form for adding new ToDo items -->
+        <form hx-post="/add" hx-target="#todo-list" hx-swap="beforeend">
+            <input type="text" name="content" placeholder="Add new ToDo" />
+            <button type="submit">Add</button>
+        </form>
+
+        <!-- List of ToDo items -->
+        <ul id="todo-list">
+            <!-- This will be initially populated by the server-rendered list of ToDo items -->
+            {% for item in items %}
+            <li id="item-{{ item.id }}">
+                {{ item.Name }} - {{ item.Active }}
+
+                <!-- Button to delete ToDo item using HTMX -->
+                <button
+                    hx-post="/delete/{{ item.id }}"
+                    hx-target="#item-{{ item.id }}"
+                    hx-swap="outerHTML"
+                    hx-confirm="Are you sure you want to delete this item?"
+                >
+                    Delete
+                </button>
+            </li>
+            {% endfor %}
+        </ul>
+    </body>
+</html>
